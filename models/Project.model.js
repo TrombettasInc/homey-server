@@ -14,6 +14,7 @@ const projectSchema = new Schema(
       required: [true, "Description is required."]
 
     },
+    deadline:  Date,
     startDate: 
       { type: Date, 
         default: Date.now }
@@ -29,7 +30,7 @@ const projectSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Task"
     }],
-    deadline:  Date
+    
 
 
     // this second object adds extra properties: `createdAt` and `updatedAt`

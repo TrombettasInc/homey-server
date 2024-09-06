@@ -17,7 +17,7 @@ const projectSchema = new Schema(
     deadline: {
       type: Date
     
-    },,
+    },
     startDate: 
       { type: Date, 
         default: Date.now }

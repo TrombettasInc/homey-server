@@ -14,7 +14,10 @@ const projectSchema = new Schema(
       required: [true, "Description is required."]
 
     },
-    deadline:  Date,
+    deadline: {
+      type: Date
+    
+    },,
     startDate: 
       { type: Date, 
         default: Date.now }

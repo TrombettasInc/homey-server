@@ -10,7 +10,7 @@ const TaskSchema = new Schema(
       
     },
     deadline: {
-      type: String
+      type: Date
     
     },
     isDone: {

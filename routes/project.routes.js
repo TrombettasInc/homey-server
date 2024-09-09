@@ -65,7 +65,7 @@ router.get("/projects/:projectId", (req,res,next)=>{
 
 router.put("/projects/:projectId", isAuthenticated, (req,res, next)=>{
     const { projectId} = req.params;
-    const { tasks } = req.body;
+    const { tasks, isDone } = req.body;
 
     console.log("Received projectId:", projectId);
     console.log("Received tasks array:", tasks); 
@@ -75,7 +75,7 @@ router.put("/projects/:projectId", isAuthenticated, (req,res, next)=>{
         return;
     }
     
-    Project.findByIdAndUpdate(projectId, { tasks }, {new:true})
+    Project.findByIdAndUpdate(projectId, { tasks, isDone }, {new:true})
     .populate("tasks")
     .then((updatedProject)=>{
         console.log("Updated project with new tasks:", updatedProject);

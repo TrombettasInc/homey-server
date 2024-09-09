@@ -22,7 +22,10 @@ const projectSchema = new Schema(
       { type: Date, 
         default: Date.now }
     ,
-    isDone: Boolean,
+    isDone: {
+      type: Boolean,
+      default: false
+    },
     user:
       [{
         type: Schema.Types.ObjectId,

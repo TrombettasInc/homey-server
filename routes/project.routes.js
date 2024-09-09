@@ -15,9 +15,9 @@ const Task = require("../models/Task.model");
 /// POST /api/projects 
 
 router.post("/projects", isAuthenticated, (req, res,next)=>{
-    const {title, description, startDate, isDone } = req.body;
+    const {title, description,deadline, startDate, isDone } = req.body;
    
-    Project.create({title, description, startDate, isDone, tasks:[]})
+    Project.create({title, description, startDate,deadline, isDone, tasks:[]})
     .then((response)=>{ res.json(response)})
     .catch((err)=>{
         console.log("error while creating the project".err);

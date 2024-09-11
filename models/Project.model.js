@@ -26,17 +26,16 @@ const projectSchema = new Schema(
       type: Boolean,
       default: false
     },
-    user:
-      [{
-        type: Schema.Types.ObjectId,
-        ref: "User"
-      }]
+    user: { 
+      type: Schema.Types.ObjectId,
+       ref: "User", 
+       required: true }
     ,
     tasks: [{
       type: Schema.Types.ObjectId,
       ref: "Task"
     }],
-    
+  
 
 
     // this second object adds extra properties: `createdAt` and `updatedAt`

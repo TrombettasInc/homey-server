@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const { isAuthenticated } = require('../middleware/jwt.middleware');
-const { isProjectOwner, isTaskOwner } = require("../middleware/ownership.middleware");
+const { isTaskOwner } = require("../middleware/ownership.middleware");
 
 const Task = require("../models/Task.model");
 const Project = require("../models/Project.model");
@@ -13,7 +13,12 @@ const Project = require("../models/Project.model");
 router.post("/tasks", isAuthenticated, (req, res, next) => {
     const { description, deadline, isDone, projectId } = req.body;
 
-    Task.create({ description, deadline, isDone, project: projectId })
+    Task.create({ description, 
+        deadline, 
+        isDone, 
+        project: projectId ,
+        createdBy: req.payload._id
+    })
         .then((newTask) => {
             return Project.findByIdAndUpdate(projectId, 
                 { $push: { tasks: newTask._id } },

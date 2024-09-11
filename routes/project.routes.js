@@ -6,7 +6,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 const Project = require("../models/Project.model");
 const Task = require("../models/Task.model");
-const { isProjectOwner, isTaskOwner } = require("../middleware/ownership.middleware");
+const { isProjectOwner } = require("../middleware/ownership.middleware");
 
 
 
@@ -20,7 +20,14 @@ router.post("/projects", isAuthenticated, (req, res,next)=>{
     const {title, description,deadline, startDate, isDone } = req.body;
     const startDateValue = startDate ? new Date(startDate) : undefined;
    
-    Project.create({title, description, startDate : startDateValue ,deadline, isDone, tasks:[]})
+    Project.create({title, 
+        description, 
+        startDate : startDateValue ,
+        deadline, 
+        isDone, 
+        tasks:[],
+        user: req.payload._id 
+    })
     .then((response)=>{ res.json(response)})
     .catch((err)=>{
         console.log("error while creating the project".err);

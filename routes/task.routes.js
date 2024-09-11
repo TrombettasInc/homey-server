@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const { isAuthenticated } = require('../middleware/jwt.middleware');
+const { isProjectOwner, isTaskOwner } = require("../middleware/ownership.middleware");
 
 const Task = require("../models/Task.model");
 const Project = require("../models/Project.model");
@@ -28,7 +29,7 @@ router.post("/tasks", isAuthenticated, (req, res, next) => {
 
 // PUT /api/tasks/:taskId
 
-router.put("/tasks/:taskId", isAuthenticated, (req,res)=>{
+router.put("/tasks/:taskId", isAuthenticated, isTaskOwner, (req,res)=>{
     const { taskId } = req.params;
     const { isDone } = req.body;
 
@@ -44,7 +45,7 @@ router.put("/tasks/:taskId", isAuthenticated, (req,res)=>{
 })
 
 // DELETE /api/tasks - Delete a task
-router.delete("/tasks/:taskId", isAuthenticated, (req, res, next) => {
+router.delete("/tasks/:taskId", isAuthenticated,isTaskOwner, (req, res, next) => {
     const { taskId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(taskId)) {

@@ -6,6 +6,8 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 const Project = require("../models/Project.model");
 const Task = require("../models/Task.model");
+const { isProjectOwner, isTaskOwner } = require("../middleware/ownership.middleware");
+
 
 
 
@@ -63,7 +65,7 @@ router.get("/projects/:projectId", (req,res,next)=>{
 
 /// PUT  /api/projects/:projectId
 
-router.put("/projects/:projectId", isAuthenticated, (req,res, next)=>{
+router.put("/projects/:projectId", isAuthenticated, isProjectOwner, (req,res, next)=>{
     const { projectId} = req.params;
     const { tasks, isDone } = req.body;
 
@@ -88,7 +90,7 @@ router.put("/projects/:projectId", isAuthenticated, (req,res, next)=>{
 
 /// Delete /api/projects/:projectId
 
-router.delete("/projects/:projectId", isAuthenticated, (req,res, next)=>{
+router.delete("/projects/:projectId", isAuthenticated, isProjectOwner,(req,res, next)=>{
     const { projectId } = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(projectId)) {

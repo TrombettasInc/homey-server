@@ -34,7 +34,7 @@ router.post("/tasks", isAuthenticated, (req, res, next) => {
 
 // PUT /api/tasks/:taskId
 
-router.put("/tasks/:taskId", isAuthenticated, isTaskOwner, (req,res)=>{
+router.put("/tasks/:taskId", isAuthenticated,  (req,res)=>{
     const { taskId } = req.params;
     const { isDone } = req.body;
 
@@ -50,7 +50,7 @@ router.put("/tasks/:taskId", isAuthenticated, isTaskOwner, (req,res)=>{
 })
 
 // DELETE /api/tasks - Delete a task
-router.delete("/tasks/:taskId", isAuthenticated,isTaskOwner, (req, res, next) => {
+router.delete("/tasks/:taskId", isAuthenticated,(req, res, next) => {
     const { taskId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(taskId)) {

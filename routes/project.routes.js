@@ -20,13 +20,7 @@ router.post("/projects", isAuthenticated, (req, res,next)=>{
     const {title, description,deadline, startDate, isDone } = req.body;
     const startDateValue = startDate ? new Date(startDate) : undefined;
 
-      // Log the payload to ensure it contains user data
-      console.log("Payload received:", req.payload);  
-
-      // Check if the payload contains the user ID
-      if (!req.payload || !mongoose.Types.ObjectId.isValid(req.payload._id)) {
-          return res.status(400).json({ message: "Invalid user ID" });
-      }
+    
    
     Project.create({title, 
         description, 
@@ -34,7 +28,7 @@ router.post("/projects", isAuthenticated, (req, res,next)=>{
         deadline, 
         isDone, 
         tasks:[],
-        createdBy : req.payload._id 
+        
     })
     .then((response)=>{ res.json(response)})
     .catch((err)=>{
@@ -61,7 +55,7 @@ router.get("/projects", (req, res,next)=>{
 
 /// GET /api/project/:projectId
 
-router.get("/projects/:projectId", isAuthenticated, isProjectOwner,(req,res,next)=>{
+router.get("/projects/:projectId", isAuthenticated, (req,res,next)=>{
     const { projectId } = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(projectId)) {
@@ -80,7 +74,7 @@ router.get("/projects/:projectId", isAuthenticated, isProjectOwner,(req,res,next
 
 /// PUT  /api/projects/:projectId
 
-router.put("/projects/:projectId", isAuthenticated, isProjectOwner, (req,res, next)=>{
+router.put("/projects/:projectId", isAuthenticated, (req,res, next)=>{
     const { projectId} = req.params;
     const { tasks, isDone } = req.body;
 
@@ -105,7 +99,7 @@ router.put("/projects/:projectId", isAuthenticated, isProjectOwner, (req,res, ne
 
 /// Delete /api/projects/:projectId
 
-router.delete("/projects/:projectId", isAuthenticated, isProjectOwner,(req,res, next)=>{
+router.delete("/projects/:projectId", isAuthenticated,(req,res, next)=>{
     const { projectId } = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(projectId)) {

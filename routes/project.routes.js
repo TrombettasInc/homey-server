@@ -68,19 +68,25 @@ router.get("/projects/:projectId", isAuthenticated, (req,res,next)=>{
 
 router.put("/projects/:projectId", isAuthenticated, (req,res, next)=>{
     const { projectId} = req.params;
-    const { tasks, isDone } = req.body;
-
+    const { title, description, deadline, tasks, isDone } = req.body;
+    
     console.log("Received projectId:", projectId);
-    console.log("Received tasks array:", tasks); 
+    console.log("Received data:", { title, description, deadline, isDone });
 
     if(!mongoose.Types.ObjectId.isValid(projectId)) {
         res.status(400).json({message: "Specified id is not valid"});
         return;
     }
     
-    Project.findByIdAndUpdate(projectId, { tasks, isDone }, {new:true})
+    Project.findByIdAndUpdate(projectId, 
+        {title, description, deadline, tasks, isDone },
+         {new:true})
     .populate("tasks")
     .then((updatedProject)=>{
+        if (!updatedProject) {
+            res.status(404).json({ message: "Project not found" });
+            return;
+        }
         console.log("Updated project with new tasks:", updatedProject);
         res.status(200).json(updatedProject)})
     .catch((err)=>{

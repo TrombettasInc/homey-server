@@ -24,10 +24,10 @@ const TaskSchema = new Schema(
       ref: "Project"
     }
   },
-  // {
-  //   // this second object adds extra properties: `createdAt` and `updatedAt`
-  //   timestamps: true,
-  // }
+   {
+    // this second object adds extra properties: `createdAt` and `updatedAt`
+     timestamps: true,
+  }
 );
 
 const Task = model("Task", TaskSchema);

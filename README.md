@@ -46,36 +46,52 @@ The project also has the following core dependencies:
 #### Development Dependencies
 - `nodemon`: ^3.1.4 - Utility to automatically restart the server on changes.
 
-### Installing and Running the Project
+## Instructions
 
-* Clone the repository:
-    ```bash
-    git clone https://github.com/TrombettasInc/homey-server.git
-    cd homey-server
-    ```
+To run in your computer, follow these steps:
+- clone 
+- install dependencies: `npm install`
+- create a `.env` file with the following environment variables
+  - ORIGIN, with the location of your frontend app (example, `ORIGIN=https://mycoolapp.netlify.com`)
+  - TOKEN_SECRET: used to sign auth tokens (example, `TOKEN_SECRET=ilovepizza`)
+- run the application: `npm run dev` or `npm start`
 
-* Install the dependencies:
-    ```bash
-    npm install
-    ```
 
-* Set up the environment variables:
-    * Create a `.env` file in the root directory.
-    * Add the following variables to the `.env` file:
-      ```bash
-      MONGODB_URI=your-mongodb-uri
-      TOKEN_SECRET=your-jwt-secret
-      ```
+## API Endpoints
 
-* Start the development server:
-    ```bash
-    npm run dev
-    ```
+<br/>
 
-* To run the project in production:
-    ```bash
-    npm start
-    ```
+**Auth Endpoints**
+
+| HTTP verb | Path              | Request Headers                     | Request Body                            | Description          |
+|-----------|-------------------|-------------------------------------|-----------------------------------------|----------------------|
+| POST      | /api/auth/signup   | –                                   | { email: String, password: String, name: String } | Create an account    |
+| POST      | /api/auth/login    | –                                   | { email: String, password: String }     | Login                |
+| GET       | /api/auth/verify   | Authorization: Bearer `<jwt>`       | –                                       | Verify JWT           |
+
+<br/>
+
+**Project Endpoints**
+
+| HTTP verb | Path                            | Request Headers                     | Request Body                            | Description          |
+|-----------|---------------------------------|-------------------------------------|-----------------------------------------|----------------------|
+| POST      | /api/projects                   | Authorization: Bearer `<jwt>`       | { title: String, description: String, deadline: Date, startDate: Date, isDone: Boolean } | Create new project   |
+| GET       | /api/projects                   | –                                   | –                                       | Get all projects     |
+| GET       | /api/projects/:projectId        | Authorization: Bearer `<jwt>`       | –                                       | Get project details  |
+| PUT       | /api/projects/:projectId        | Authorization: Bearer `<jwt>`       | { title: String, description: String, tasks: Array, deadline: Date, isDone: Boolean } | Update a project     |
+| DELETE    | /api/projects/:projectId        | Authorization: Bearer `<jwt>`       | –                                       | Delete a project     |
+
+<br/>
+
+**Task Endpoints**
+
+| HTTP verb | Path                            | Request Headers                     | Request Body                            | Description          |
+|-----------|---------------------------------|-------------------------------------|-----------------------------------------|----------------------|
+| POST      | /api/tasks                      | Authorization: Bearer `<jwt>`       | { description: String, deadline: Date, projectId: ObjectId, isDone: Boolean } | Create new task      |
+| PUT       | /api/tasks/:taskId              | Authorization: Bearer `<jwt>`       | { isDone: Boolean }                     | Update task status   |
+| DELETE    | /api/tasks/:taskId              | Authorization: Bearer `<jwt>`       | –                                       | Delete a task        |
+
+
 
 ## Help
 

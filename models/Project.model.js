@@ -25,7 +25,10 @@ const projectSchema = new Schema(
     tasks: [{
       type: Schema.Types.ObjectId,
       ref: "Task"
-    }]
+    }],
+    user: { 
+      type: Schema.Types.ObjectId, 
+      ref: "User", required: true }, // User reference
   },
   { timestamps: true }  // This line enables timestamps
 );

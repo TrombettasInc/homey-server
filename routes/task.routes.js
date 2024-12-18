@@ -10,13 +10,20 @@ router.post("/tasks", isAuthenticated, (req, res, next) => {
   const { description, deadline, isDone, projectId } = req.body;
 
   Task.create({
-    description, deadline, isDone, project: projectId
+    description,
+    deadline,
+    isDone,
+    project: projectId,
   })
-    .then(newTask => {
-      return Project.findByIdAndUpdate(projectId, { $push: { tasks: newTask._id } }, { new: true });
+    .then((newTask) => {
+      return Project.findByIdAndUpdate(
+        projectId,
+        { $push: { tasks: newTask._id } },
+        { new: true }
+      ).populate("tasks"); // Populate tasks after adding the new task
     })
-    .then(response => res.json(response))
-    .catch(err => {
+    .then((updatedProject) => res.json(updatedProject))
+    .catch((err) => {
       console.log("Error while creating the task", err);
       res.status(500).json({ message: "Error while creating the task" });
     });
@@ -33,8 +40,10 @@ router.put("/tasks/:taskId", isAuthenticated, isTaskOwner, (req, res, next) => {
   const { isDone } = req.body;
 
   Task.findByIdAndUpdate(taskId, { isDone }, { new: true })
-    .then(updatedTask => res.json(updatedTask))
-    .catch(err => res.status(500).json({ message: "Error while updating the task", err }));
+    .then((updatedTask) => res.json(updatedTask))
+    .catch((err) =>
+      res.status(500).json({ message: "Error while updating the task", err })
+    );
 });
 
 // DELETE /api/tasks/:taskId - Delete a task (only if the user owns the project containing the task)
@@ -42,8 +51,12 @@ router.delete("/tasks/:taskId", isAuthenticated, isTaskOwner, (req, res, next) =
   const { taskId } = req.params;
 
   Task.findByIdAndDelete(taskId)
-    .then(() => res.json({ message: `Task with ID ${taskId} was deleted successfully.` }))
-    .catch(err => res.status(500).json({ message: "Error while deleting the task", err }));
+    .then(() =>
+      res.json({ message: `Task with ID ${taskId} was deleted successfully.` })
+    )
+    .catch((err) =>
+      res.status(500).json({ message: "Error while deleting the task", err })
+    );
 });
 
 module.exports = router;

@@ -22,9 +22,9 @@ router.post("/projects", isAuthenticated, (req, res, next) => {
 // GET /api/projects - Get all projects of the authenticated user
 router.get("/projects", isAuthenticated, (req, res, next) => {
   Project.find({ user: req.payload._id })
-    .populate("tasks")
-    .then(allProjects => res.json(allProjects))
-    .catch(err => {
+    .populate("tasks") // Populate the tasks
+    .then((allProjects) => res.json(allProjects))
+    .catch((err) => {
       console.log("Error while getting the projects", err);
       res.status(500).json({ message: "Error while getting the projects" });
     });
@@ -32,7 +32,10 @@ router.get("/projects", isAuthenticated, (req, res, next) => {
 
 // GET /api/projects/:projectId - Get a specific project (only if the user owns it)
 router.get("/projects/:projectId", isAuthenticated, canViewProject, (req, res, next) => {
-  res.status(200).json(req.project);
+  Project.findById(req.params.projectId)
+    .populate("tasks") // Populate the tasks
+    .then((project) => res.status(200).json(project))
+    .catch((err) => res.status(500).json({ message: "Error while fetching the project", err }));
 });
 
 // PUT /api/projects/:projectId - Update a specific project (only if the user owns it)

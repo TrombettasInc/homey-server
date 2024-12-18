@@ -12,11 +12,13 @@ const TaskSchema = new Schema(
 
     },
     deadline: {
-      type: Date
+      type: Date,
+      
 
     },
     isDone: {
       type: Boolean,
+      default: false,
       required: true
     },
     project: {

@@ -31,38 +31,34 @@ const canViewProject = async (req, res, next) => {
 };
 
 // Middleware to check if the user can view a task (via the project)
-const canViewTask = async (req, res, next) => {
+async function canViewTask(req, res, next) {
   const { taskId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(taskId)) {
-    return res.status(400).json({ message: "Invalid task ID" });
-  }
-
   try {
-    const task = await Task.findById(taskId).populate('project');
+    const task = await Task.findById(taskId).populate("project");
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(404).json({ message: "Task not found." });
     }
 
-    // Check if the authenticated user is the owner of the project related to the task
-    const project = task.project;
-    if (!project.user.equals(req.payload._id)) {
-      return res.status(403).json({ message: "Unauthorized: You cannot view this task" });
+    // Check if the authenticated user owns the project
+    if (String(task.project.user) !== String(req.user._id)) {
+      return res.status(403).json({ message: "You are not authorized to view this task." });
     }
 
-    req.task = task;  // Attach the task to the request object for further use
+    req.task = task; // Pass task to the next handler
     next();
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    res.status(500).json({ message: "Error verifying task ownership.", err });
   }
-};
+}
+
 
 // Middleware to check if the user is the owner of the project for modification or deletion
 const isProjectOwner = async (req, res, next) => {
   const { projectId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(projectId)) {
-    return res.status(400).json({ message: "Invalid project ID" });
+    return res.status(400).json({ message: `Invalid ID format for ${req.params.taskId ? 'task' : 'project'}` });
   }
 
   try {
@@ -92,7 +88,7 @@ const isTaskOwner = async (req, res, next) => {
   }
 
   try {
-    const task = await Task.findById(taskId).populate('project');
+    const task = await Task.findById(taskId).populate('project', 'user');
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
